@@ -1,10 +1,7 @@
-use actix_web::{
-    get,
-    web::{self, ServiceConfig},
-    HttpResponse,
-};
+use actix_web::{get, web::ServiceConfig, HttpResponse};
 use shuttle_actix_web::ShuttleActixWeb;
 
+mod day_1;
 mod day_4;
 
 #[get("/")]
@@ -17,23 +14,12 @@ async fn do_error() -> HttpResponse {
     HttpResponse::InternalServerError().finish()
 }
 
-#[get("/1/{tail:.*}")]
-async fn cube_the_bits(path: web::Path<String>) -> HttpResponse {
-    let xor_numbers: i32 = path
-        .split('/')
-        .map(|s| s.parse::<i32>().unwrap())
-        .reduce(|a, b| a ^ b)
-        .unwrap();
-
-    HttpResponse::Ok().body(xor_numbers.pow(3).to_string())
-}
-
 #[shuttle_runtime::main]
 async fn main() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let config = move |cfg: &mut ServiceConfig| {
         cfg.service(hello_world);
         cfg.service(do_error);
-        cfg.service(cube_the_bits);
+        cfg.service(day_1::cube_the_bits);
         cfg.service(day_4::strength_route);
         cfg.service(day_4::contest_route);
     };
