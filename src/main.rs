@@ -5,6 +5,8 @@ use actix_web::{
 };
 use shuttle_actix_web::ShuttleActixWeb;
 
+mod day_4;
+
 #[get("/")]
 async fn hello_world() -> &'static str {
     "Hello World!"
@@ -32,6 +34,8 @@ async fn main() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clon
         cfg.service(hello_world);
         cfg.service(do_error);
         cfg.service(cube_the_bits);
+        cfg.service(day_4::strength_route);
+        cfg.service(day_4::contest_route);
     };
 
     Ok(config.into())
